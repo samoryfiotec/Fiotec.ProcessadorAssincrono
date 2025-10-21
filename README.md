@@ -4,7 +4,7 @@ Este repositório implementa uma aplicação .NET 8 baseada em **Clean Architect
 
 ---
 
-## 🧱 Estrutura de Projetos
+## Estrutura de Projetos
 
 ```
 ProcessadorAssincrono/
@@ -16,7 +16,7 @@ ProcessadorAssincrono/
 ```
 ---
 
-## ⚙️ Tecnologias Utilizadas
+## Tecnologias Utilizadas
 
 - .NET 8
 - Dapper

@@ -1,6 +1,8 @@
 ﻿namespace Fiotec.ProcessadorAssincrono.Application.Interfaces
 {
-    internal interface IAprovacaoService
+    public interface IAprovacaoService
     {
+        Task AprovarAsync(Guid id);
     }
+
 }

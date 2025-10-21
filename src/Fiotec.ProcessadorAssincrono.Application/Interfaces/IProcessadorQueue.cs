@@ -1,6 +1,8 @@
 ﻿namespace Fiotec.ProcessadorAssincrono.Application.Interfaces
 {
-    internal interface IProcessadorQueue
+    public interface IProcessadorQueue
     {
+        Task EnfileirarAsync(Guid id);
     }
+
 }

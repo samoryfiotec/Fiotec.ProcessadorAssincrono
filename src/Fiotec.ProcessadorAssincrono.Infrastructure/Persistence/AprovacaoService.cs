@@ -1,12 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Data;
+using Dapper;
+using Fiotec.ProcessadorAssincrono.Application.Interfaces;
 
 namespace Fiotec.ProcessadorAssincrono.Infrastructure.Persistence
 {
-    internal class AprovacaoService
+    public class AprovacaoService : IAprovacaoService
     {
+        private readonly IDbConnection _connection;
+
+        public AprovacaoService(IDbConnection connection)
+        {
+            _connection = connection;
+        }
+
+        public async Task AprovarAsync(Guid id)
+        {
+            var sql = "UPDATE Requisicoes SET Aprovada = 1 WHERE Id = @Id AND Aprovada = 0";
+            await _connection.ExecuteAsync(sql, new { Id = id });
+        }
     }
 }
