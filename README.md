@@ -65,7 +65,7 @@ Expõe o endpoint `/aprovar-em-lote` para enfileirar múltiplas requisições.
 ### Crie um banco de dados SQL Server 2022 via Docker
 
 ```bash
-docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=SenhaForte123!" \ 
+docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=SenhaForte123!" \
 -p 1433:1433 --name dbprocessador \
 -v sqlvolume:/var/opt/mssql \
 -d mcr.microsoft.com/mssql/server:2022-latest
@@ -92,4 +92,4 @@ CREATE TABLE Requisicoes (
 
 ### Licença
 
-Este projeto está licenciado sob a Licença MIT [MIT](./LICENSE)
+Este projeto está licenciado sob a Licença [MIT](./LICENSE)
