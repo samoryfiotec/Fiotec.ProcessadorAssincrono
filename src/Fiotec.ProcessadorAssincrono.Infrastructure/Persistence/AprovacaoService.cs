@@ -4,7 +4,7 @@ using Fiotec.ProcessadorAssincrono.Application.Interfaces;
 
 namespace Fiotec.ProcessadorAssincrono.Infrastructure.Persistence
 {
-    public class AprovacaoService : IAprovacaoService
+    public class AprovacaoService : IAprovacaoService /* Mudar isso aqui de lugar! */
     {
         private readonly IDbConnection _connection;
 

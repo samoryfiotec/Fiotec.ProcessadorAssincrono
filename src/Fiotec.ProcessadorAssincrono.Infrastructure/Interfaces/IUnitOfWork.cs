@@ -1,4 +1,4 @@
-﻿namespace Fiotec.ProcessadorAssincrono.Application.Interfaces
+﻿namespace Fiotec.ProcessadorAssincrono.Infrastructure.Interfaces
 {
     public interface IUnitOfWork : IDisposable
     {
