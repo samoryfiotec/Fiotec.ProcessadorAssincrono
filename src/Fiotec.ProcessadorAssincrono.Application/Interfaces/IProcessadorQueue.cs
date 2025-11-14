@@ -2,7 +2,8 @@
 {
     public interface IProcessadorQueue
     {
-        Task EnfileirarAsync(Guid id);
+        Task EnfileirarAsync(Guid id, string pep, string comentariosAdicionais);
     }
+
 
 }

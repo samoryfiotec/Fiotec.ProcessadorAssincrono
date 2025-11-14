@@ -2,7 +2,8 @@
 {
     public interface IAprovacaoService
     {
-        Task AprovarAsync(Guid id);
+        Task AprovarAsync(Guid id, string pep, string comentariosAdicionais);
     }
+
 
 }

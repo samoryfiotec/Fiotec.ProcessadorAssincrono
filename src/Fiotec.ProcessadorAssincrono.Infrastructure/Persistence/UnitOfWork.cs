@@ -7,24 +7,20 @@ namespace Fiotec.ProcessadorAssincrono.Infrastructure.Persistence
     public class UnitOfWork : IUnitOfWork
     {
         private readonly IDbConnection _connection;
-        private IDbTransaction _transaction;
-        private IDbConnectionFactory connectionFactory;
-        private readonly ILogger _logger;      
+        private readonly IDbTransaction _transaction;
+        private readonly ILogger<UnitOfWork> _logger;
 
-        //public IClasseRepository Classes { get; }
+        public IAprovacaoRepository Aprovacoes { get; }
 
-        public UnitOfWork(IDbConnectionFactory connectionFactory, ILogger logger)
+        public UnitOfWork(IDbConnectionFactory connectionFactory, ILoggerFactory loggerFactory)
         {
-            this.connectionFactory = connectionFactory;
-            _logger = logger;
+            _logger = loggerFactory.CreateLogger<UnitOfWork>();
+
             _connection = connectionFactory.CreateConnection();
             _connection.Open();
             _transaction = _connection.BeginTransaction();
-        }
 
-        public UnitOfWork(IDbConnectionFactory connectionFactory)
-        {
-            this.connectionFactory = connectionFactory;
+            Aprovacoes = new AprovacaoRepository(_connection, _transaction, loggerFactory.CreateLogger<AprovacaoRepository>());
         }
 
         public async Task CommitAsync()
@@ -32,12 +28,12 @@ namespace Fiotec.ProcessadorAssincrono.Infrastructure.Persistence
             try
             {
                 _transaction?.Commit();
-                _logger.LogInformation("Transação confirmada com sucesso.");
+                _logger.LogInformation("Transaction committed successfully.");
             }
-            catch
+            catch (Exception ex)
             {
                 _transaction?.Rollback();
-                _logger.LogError("Transação revertida.");
+                _logger.LogError(ex, "Transaction rolled back due to error during commit.");
                 throw;
             }
             finally
@@ -45,7 +41,7 @@ namespace Fiotec.ProcessadorAssincrono.Infrastructure.Persistence
                 _transaction?.Dispose();
                 _connection?.Close();
                 _connection?.Dispose();
-                _logger.LogInformation("Conexão com o banco de dados fechada.");
+                _logger.LogInformation("Database connection closed after commit.");
             }
 
             await Task.CompletedTask;
@@ -56,14 +52,14 @@ namespace Fiotec.ProcessadorAssincrono.Infrastructure.Persistence
             try
             {
                 _transaction?.Rollback();
-                _logger.LogInformation("Transação revertida com sucesso.");
+                _logger.LogInformation("Transaction rolled back.");
             }
             finally
             {
                 _transaction?.Dispose();
                 _connection?.Close();
                 _connection?.Dispose();
-                _logger.LogInformation("Conexão com o banco de dados fechada depois de transação revertida.");
+                _logger.LogInformation("Database connection closed after rollback.");
             }
 
             await Task.CompletedTask;

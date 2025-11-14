@@ -2,8 +2,9 @@
 {
     public interface IUnitOfWork : IDisposable
     {
-        //IClasseRepository Classes { get; }
+        IAprovacaoRepository Aprovacoes { get; }
         Task CommitAsync();
         Task RollbackAsync();
     }
+
 }

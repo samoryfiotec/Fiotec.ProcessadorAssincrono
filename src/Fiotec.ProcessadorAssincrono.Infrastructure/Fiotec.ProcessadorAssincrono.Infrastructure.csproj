@@ -14,6 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Fiotec.ProcessadorAssincrono.Application\Fiotec.ProcessadorAssincrono.Application.csproj" />
+    <ProjectReference Include="..\Fiotec.ProcessadorAssincrono.Domain\Fiotec.ProcessadorAssincrono.Domain.csproj" />
   </ItemGroup>
 
 </Project>

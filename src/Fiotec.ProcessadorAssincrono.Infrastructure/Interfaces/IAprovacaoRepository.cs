@@ -1,6 +1,9 @@
-﻿namespace Fiotec.ProcessadorAssincrono.Infrastructure.Interfaces
+﻿using Fiotec.ProcessadorAssincrono.Domain.Entities;
+
+namespace Fiotec.ProcessadorAssincrono.Infrastructure.Interfaces
 {
-    public interface IAprovacaoRepository
+    public interface IAprovacaoRepository : IRepository<Aprovacao>
     {
     }
+
 }
