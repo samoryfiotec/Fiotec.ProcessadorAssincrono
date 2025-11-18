@@ -66,7 +66,7 @@ Expõe o endpoint `/aprovar-em-lote` para enfileirar múltiplas requisições.
 
 ```bash
 docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=SenhaForte123!" \
--p 1433:1433 --name dbprocessador \
+-p 1433:1433 --name sqlserverdocker \
 -v sqlvolume:/var/opt/mssql \
 -d mcr.microsoft.com/mssql/server:2022-latest
 ```
