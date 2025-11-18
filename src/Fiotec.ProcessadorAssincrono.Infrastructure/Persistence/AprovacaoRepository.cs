@@ -19,40 +19,27 @@ namespace Fiotec.ProcessadorAssincrono.Infrastructure.Persistence
             _logger = logger;
         }
 
-        public async Task InserirAsync(Aprovacao entity)
+        public Task InserirAsync(Aprovacao entity)
         {
             ArgumentNullException.ThrowIfNull(entity);
 
             if (entity.Id == Guid.Empty)
                 entity.Id = Guid.NewGuid();
 
-            const string sql = "INSERT INTO Aprovacoes (Id, Pep, ComentariosAdicionais) VALUES (@Id, @Pep, @ComentariosAdicionais);";
+            const string sql = "INSERT INTO Aprovacoes (Id, Pep, ComentariosAdicionais, DataAprovacao) VALUES (@Id, @Pep, @ComentariosAdicionais, @DataAprovacao);";
 
-            try
+            return _connection.ExecuteAsync(sql, new
             {
-                // Abre conexão de forma segura, se necessário
-                if (_connection is System.Data.Common.DbConnection dbConn && dbConn.State != ConnectionState.Open)
-                {
-                    await dbConn.OpenAsync();
-                }
-                else if (_connection.State != ConnectionState.Open)
-                {
-                    _connection.Open();
-                }
-
-                var parameters = new { entity.Id, entity.Pep, entity.ComentariosAdicionais };
-                await _connection.ExecuteAsync(sql, parameters, _transaction);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Erro ao inserir aprovação com Id {AprovacaoId}", entity.Id);
-                throw;
-            }
+                entity.Id,
+                entity.Pep,
+                entity.ComentariosAdicionais,
+                entity.DataAprovacao
+            }, _transaction);           
         }
 
         public async Task<Aprovacao?> ObterPorId(Guid id)
         {
-            const string sql = "SELECT Id, Pep, ComentariosAdicionais FROM Aprovacoes WHERE Id = @Id;";
+            const string sql = "SELECT Id, Pep, ComentariosAdicionais, DataAprovacao FROM Aprovacoes WHERE Id = @Id;";
             try
             {
                 if (_connection is System.Data.Common.DbConnection dbConn && dbConn.State != ConnectionState.Open)
@@ -75,7 +62,7 @@ namespace Fiotec.ProcessadorAssincrono.Infrastructure.Persistence
 
         public async Task<IEnumerable<Aprovacao>> ObterTodosAsync()
         {
-            const string sql = "SELECT Id, Pep, ComentariosAdicionais FROM Aprovacoes;";
+            const string sql = "SELECT Id, Pep, ComentariosAdicionais, DataAprovacao FROM Aprovacoes;";
             try
             {
                 if (_connection is System.Data.Common.DbConnection dbConn && dbConn.State != ConnectionState.Open)

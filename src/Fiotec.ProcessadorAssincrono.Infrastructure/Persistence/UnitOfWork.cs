@@ -28,12 +28,12 @@ namespace Fiotec.ProcessadorAssincrono.Infrastructure.Persistence
             try
             {
                 _transaction?.Commit();
-                _logger.LogInformation("Transaction committed successfully.");
+                _logger.LogInformation("[{Hora}] Transação confirmada com sucesso.", DateTime.Now);
             }
             catch (Exception ex)
             {
                 _transaction?.Rollback();
-                _logger.LogError(ex, "Transaction rolled back due to error during commit.");
+                _logger.LogError(ex, "[{Hora}] Erro ao confirmar transação. Realizado rollback.", DateTime.Now);
                 throw;
             }
             finally
@@ -41,7 +41,7 @@ namespace Fiotec.ProcessadorAssincrono.Infrastructure.Persistence
                 _transaction?.Dispose();
                 _connection?.Close();
                 _connection?.Dispose();
-                _logger.LogInformation("Database connection closed after commit.");
+                _logger.LogInformation("[{Hora}] Conexão com banco de dados encerrada após commit.", DateTime.Now);
             }
 
             await Task.CompletedTask;
@@ -52,14 +52,14 @@ namespace Fiotec.ProcessadorAssincrono.Infrastructure.Persistence
             try
             {
                 _transaction?.Rollback();
-                _logger.LogInformation("Transaction rolled back.");
+                _logger.LogInformation("[{Hora}] Transação revertida com sucesso.", DateTime.Now);
             }
             finally
             {
                 _transaction?.Dispose();
                 _connection?.Close();
                 _connection?.Dispose();
-                _logger.LogInformation("Database connection closed after rollback.");
+                _logger.LogInformation("[{Hora}] Conexão com banco de dados encerrada após rollback.", DateTime.Now);
             }
 
             await Task.CompletedTask;

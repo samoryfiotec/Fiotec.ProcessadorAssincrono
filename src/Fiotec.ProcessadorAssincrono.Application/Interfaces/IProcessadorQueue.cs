@@ -2,7 +2,7 @@
 {
     public interface IProcessadorQueue
     {
-        Task EnfileirarAsync(Guid id, string pep, string comentariosAdicionais);
+        Task EnfileirarAsync(Guid id, string pep, string comentariosAdicionais, DateTime utcNow);
     }
 
 
