@@ -10,10 +10,12 @@
     <PackageReference Include="Dapper" Version="2.1.66" />
     <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.2" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.10" />
+    <PackageReference Include="Polly" Version="8.6.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Fiotec.ProcessadorAssincrono.Application\Fiotec.ProcessadorAssincrono.Application.csproj" />
+    <ProjectReference Include="..\Fiotec.ProcessadorAssincrono.Domain\Fiotec.ProcessadorAssincrono.Domain.csproj" />
   </ItemGroup>
 
 </Project>
