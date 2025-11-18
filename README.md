@@ -83,9 +83,10 @@ CREATE DATABASE Processador;
 ### Crie a tabela `Requisicoes`:
 
 ```sql
-CREATE TABLE Requisicoes (
-    Id UNIQUEIDENTIFIER PRIMARY KEY,
+CREATE TABLE Aprovacoes (
+    Guid Id PRIMARY KEY,
     Aprovada BIT NOT NULL,
+    ComentariosAdicionais STRING,
     DataSolicitacao DATETIME NOT NULL
 );
 ```
