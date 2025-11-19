@@ -12,11 +12,16 @@ namespace Fiotec.ProcessadorAssincrono.Infrastructure.Data
 
         public DapperContext(IConfiguration configuration)
         {
-            _connectionString = configuration.GetConnectionString("DefaultConnection");
+            _connectionString = configuration["ConnectionStrings:DefaultConnection"];
         }
 
         public IDbConnection CreateConnection()
-        => new SqlConnection(_connectionString);
+        {
+            if (string.IsNullOrWhiteSpace(_connectionString))
+                throw new InvalidOperationException("Connection string não pode ser nula ou vazia");
+
+            return new SqlConnection(_connectionString);
+        }
 
     }
 }
