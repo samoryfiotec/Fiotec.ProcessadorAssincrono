@@ -85,9 +85,9 @@ CREATE DATABASE Processador;
 
 ```sql
 CREATE TABLE Aprovacoes (
-    Id UNIQUEIDENTIFIER PRIMARY KEY,
-    Pep NVARCHAR(100) NOT NULL,
-    ComentariosAdicionais NVARCHAR(MAX) NOT NULL,
+    Guid Id PRIMARY KEY,
+    Aprovada BIT NOT NULL,
+    ComentariosAdicionais STRING,
     DataSolicitacao DATETIME NOT NULL
 );
 ```
