@@ -15,6 +15,7 @@ Este repositório implementa uma aplicação .NET 8 baseada em **Clean Architect
 [![Minimal APIs](https://img.shields.io/badge/Minimal_APIs-.NET-512BD4?style=flat-square&logo=dotnet&logoColor=white)](https://learn.microsoft.com/aspnet/core/fundamentals/minimal-apis) 
 [![xUnit](https://img.shields.io/badge/xUnit-Tests-512BD4?style=flat-square&logo=xunit&logoColor=white)](https://xunit.net/) 
 [![Moq](https://img.shields.io/badge/Moq-Mocking-9B4F96?style=flat-square)](https://github.com/moq)
+[![Shouldly](https://img.shields.io/badge/Shouldly-Assertions-8A2BE2?style=flat-square)](https://shouldly.readthedocs.io/en/latest/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](./LICENSE)
 
 ---
@@ -40,7 +41,7 @@ ProcessadorAssincrono/
 - BackgroundService
 - `Channel<Guid>`
 - Minimal APIs
-- xUnit + Moq
+- Polly
 
 ---
 
@@ -52,21 +53,21 @@ Permite enfileirar IDs de requisições para processamento em segundo plano, des
 
 ### `AprovacaoService` com Dapper
 
-Realiza a atualização da entidade `Requisicao` no banco SQL Server, marcando como aprovada.
+Realiza a atualização da entidade `Aprovacao` no banco SQL Server, marcando como aprovada.
 
 ### Minimal API
 
-Expõe o endpoint `/aprovar-em-lote` para enfileirar múltiplas requisições.
+Expõe o endpoint `api/diarias/{'guid'}/aprovar` para enfileirar múltiplas requisições.
 
 ---
 
-## Criação e configuração do SQL Server
+## Criação e configuração do SQL Server 20222
 
-### Crie um banco de dados SQL Server 2022 via Docker
+### Crie um banco de dados via Docker
 
 ```bash
 docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=SenhaForte123!" \
--p 1433:1433 --name dbprocessador \
+-p 1433:1433 --name sqlserverdocker \
 -v sqlvolume:/var/opt/mssql \
 -d mcr.microsoft.com/mssql/server:2022-latest
 ```
@@ -80,15 +81,43 @@ SA_PASSWORD: Defina uma senha forte para o usuário sa. (Pode utilizar o SenhaFo
 CREATE DATABASE Processador;
 ```
 
-### Crie a tabela `Requisicoes`:
+### Crie a tabela `Aprovacoes`:
 
 ```sql
-CREATE TABLE Requisicoes (
+CREATE TABLE Aprovacoes (
     Id UNIQUEIDENTIFIER PRIMARY KEY,
-    Aprovada BIT NOT NULL,
+    Pep NVARCHAR(100) NOT NULL,
+    ComentariosAdicionais NVARCHAR(MAX) NOT NULL,
     DataSolicitacao DATETIME NOT NULL
 );
 ```
+
+## Testes Unitários nesta POC
+
+### Instalação dos pacotes necessários
+
+No diretório do projeto de testes, execute:
+
+```bash
+dotnet add package xunit
+dotnet add package xunit.runner.visualstudio
+dotnet add package Moq
+dotnet add package Shouldly
+```
+
+Esses pacotes são:
+
+- **xUnit**: Framework de testes.
+- **xunit.runner.visualstudio**: Integração com Visual Studio.
+- **Moq**: Biblioteca para criação de mocks.
+- **Shouldly**: Assertivas legíveis (licença MIT).
+
+### Referências
+
+- [xUnit Documentation](https://xunit.net/)
+- [Moq Documentation](https://github.com/moq/moq4)
+- [Shouldly Documentation](https://shouldly.readthedocs.io/en/latest/)
+
 
 ### Licença
 
