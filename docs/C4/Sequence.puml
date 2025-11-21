@@ -1,0 +1,54 @@
+Get-ChildItem -Recurse -File .\src | Select-Object FullName
+@startuml AprovacaoSequence
+title Diagrama de Sequência - Requisição Assíncrona
+
+actor Usuário
+participant "Aplicação Web" as WebApp
+participant "Serviço de Autenticação" as Auth
+participant "Fila de Tarefas" as Queue
+database "Banco de Dados" as DB
+participant "Worker" as Worker
+
+Usuário -> WebApp : Envia requisição (POST /processar)
+activate WebApp
+
+WebApp -> Auth : Verificar token
+activate Auth
+Auth -> DB : Consultar credenciais
+activate DB
+DB --> Auth : Resultado da consulta
+deactivate DB
+Auth --> WebApp : Token válido
+deactivate Auth
+
+alt Autenticado
+    WebApp -> Queue : Enfileirar tarefa (dados)
+    activate Queue
+    Queue --> WebApp : Confirmação de enfileiramento (id)
+    deactivate Queue
+
+    WebApp -> Usuário : Resposta 202 Accepted (id da tarefa)
+
+    par Processamento em segundo plano
+        Worker -> Queue : Retirar tarefa (id)
+        activate Worker
+        Queue --> Worker : Dados da tarefa
+        deactivate Queue
+
+        Worker -> DB : Persistir resultado parcial
+        activate DB
+        DB --> Worker : OK
+        deactivate DB
+
+        Worker -> DB : Persistir resultado final
+        activate DB
+        DB --> Worker : OK
+        deactivate DB
+        deactivate Worker
+    end
+else Falha na autenticação
+    WebApp -> Usuário : Resposta 401 Unauthorized
+end
+
+deactivate WebApp
+@enduml

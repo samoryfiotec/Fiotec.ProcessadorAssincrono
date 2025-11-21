@@ -1,0 +1,22 @@
+@startuml
+' Diagrama de Contexto - Processador de Aprovações
+!define C4P https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master
+!includeurl C4P/C4_Context.puml
+
+LAYOUT_WITH_LEGEND()
+
+Person(user, "Usuário", "Usuário final que submete e monitora aprovações")
+Person(admin, "Administrador", "Gerencia configurações e monitora o sistema")
+
+System_Boundary(s1, "Processador de Aprovações") {
+    System(system, "Processador de Aprovações", "Aplicação responsável por orquestrar e executar processamento de aprovações")
+}
+
+System_Ext(sqlServer, "Banco de Dados SQL Server", "SQL Server", "Persistência de aprovações e histórico")
+
+Rel(user, system, "Submete aprovações / Monitora status", "HTTPS / UI")
+Rel(admin, system, "Configura e monitora", "HTTPS / UI")
+Rel(system, sqlServer, "Persiste aprovações e histórico", "TDS / SQL Server")
+
+SHOW_LEGEND()
+@enduml
