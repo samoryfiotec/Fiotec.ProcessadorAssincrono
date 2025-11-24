@@ -92,7 +92,15 @@ CREATE TABLE Aprovacoes (
 );
 ```
 
+## Arquitetura
+
+### Contexto
+
+![Diagrama de Contexto](./out/docs/C4/Context/Context.png)
+
 ## Testes Unitários nesta POC
+
+![Coverage do Processador](./out/img/coverage_processador.png)
 
 ### Instalação dos pacotes necessários
 
