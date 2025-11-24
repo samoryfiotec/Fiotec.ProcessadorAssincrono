@@ -1,54 +1,44 @@
-Get-ChildItem -Recurse -File .\src | Select-Object FullName
-@startuml AprovacaoSequence
-title Diagrama de Sequência - Requisição Assíncrona
+@startuml AprovarDiariasLote
+title Diagrama de Sequência - Aprovar Diárias em Lote com BackgroundService e Channel
 
-actor Usuário
-participant "Aplicação Web" as WebApp
-participant "Serviço de Autenticação" as Auth
-participant "Fila de Tarefas" as Queue
-database "Banco de Dados" as DB
-participant "Worker" as Worker
+actor "Aprovador" as approver
+participant "Frontend (React)" as fe
+participant "Minimal API" as api
+participant "AprovacaoRequest" as dto
+participant "IProcessadorQueue" as queue
+participant "Channel<Aprovacao>" as channel
+participant "BackgroundService" as worker
+participant "IAprovacaoService" as service
+database "DB SQL Server" as db
 
-Usuário -> WebApp : Envia requisição (POST /processar)
-activate WebApp
+== Fluxo de Aprovação em Lote ==
+approver -> fe: Seleciona múltiplas diárias
+approver -> fe: Clica em "Aprovar em Lote"
+fe -> api: PUT /api/diarias/{id}/aprovar [AprovacaoRequest]
+activate api
 
-WebApp -> Auth : Verificar token
-activate Auth
-Auth -> DB : Consultar credenciais
-activate DB
-DB --> Auth : Resultado da consulta
-deactivate DB
-Auth --> WebApp : Token válido
-deactivate Auth
+api -> dto: Cria objeto AprovacaoRequest
+api -> queue: EnfileirarAsync(id, pep, comentariosAdicionais, DataAprovacao)
+activate queue
+queue -> channel: WriteAsync(Aprovacao)
+queue --> api: Confirma enfileiramento
+deactivate queue
 
-alt Autenticado
-    WebApp -> Queue : Enfileirar tarefa (dados)
-    activate Queue
-    Queue --> WebApp : Confirmação de enfileiramento (id)
-    deactivate Queue
+api --> fe: Retorna HTTP 202 Accepted
+deactivate api
+fe --> approver: Exibe mensagem de sucesso
 
-    WebApp -> Usuário : Resposta 202 Accepted (id da tarefa)
-
-    par Processamento em segundo plano
-        Worker -> Queue : Retirar tarefa (id)
-        activate Worker
-        Queue --> Worker : Dados da tarefa
-        deactivate Queue
-
-        Worker -> DB : Persistir resultado parcial
-        activate DB
-        DB --> Worker : OK
-        deactivate DB
-
-        Worker -> DB : Persistir resultado final
-        activate DB
-        DB --> Worker : OK
-        deactivate DB
-        deactivate Worker
-    end
-else Falha na autenticação
-    WebApp -> Usuário : Resposta 401 Unauthorized
+== Processamento Assíncrono ==
+loop para cada mensagem no Channel
+    worker -> channel: ReadAsync()
+    activate worker
+    worker -> service: AprovarAsync(Id, Pep, ComentariosAdicionais, DataAprovacao)
+    activate service
+    service -> db: Atualiza status para "Aprovada"
+    service -> db: Registra histórico de aprovação
+    deactivate service
+    worker --> channel: Mensagem processada
+    deactivate worker
 end
 
-deactivate WebApp
 @enduml
