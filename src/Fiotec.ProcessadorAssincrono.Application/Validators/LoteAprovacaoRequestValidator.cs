@@ -1,0 +1,18 @@
+﻿using Fiotec.ProcessadorAssincrono.Domain.DTOs;
+using FluentValidation;
+
+namespace Fiotec.ProcessadorAssincrono.Application.Validators;
+
+public class LoteAprovacaoRequestValidator : AbstractValidator<LoteAprovacaoRequest>
+{
+    public LoteAprovacaoRequestValidator()
+    {
+        RuleFor(x => x.Solicitacoes)
+            .NotNull().WithMessage("A lista de solicitações não pode ser nula.")
+            .NotEmpty().WithMessage("É necessário informar pelo menos uma solicitação.")
+            .Must(list => list.All(id => id != Guid.Empty))
+            .WithMessage("Todos os GUIDs devem ser válidos (não vazios).")
+            .Must(list => list.Distinct().Count() == list.Count)
+            .WithMessage("A lista não pode conter GUIDs duplicados.");
+    }
+}

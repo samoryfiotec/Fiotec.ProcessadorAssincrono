@@ -1,18 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Threading.Tasks;
+﻿using System.Data;
 using Fiotec.ProcessadorAssincrono.Domain.Entities;
 using Fiotec.ProcessadorAssincrono.Infrastructure.Persistence;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Shouldly;
-using Xunit;
 
 namespace Fiotec.ProcessadorAssincrono.Tests.Infrastructure
 {
     public class AprovacaoRepositoryTests
     {
+        private readonly Mock<IDbConnection> _mockConnection;
+        private readonly Mock<IDbTransaction> _mockTransaction;
+        private readonly Mock<ILogger<AprovacaoRepository>> _mockLogger;
+        private readonly AprovacaoRepository _repository;
+
+        public AprovacaoRepositoryTests()
+        {
+            _mockConnection = new Mock<IDbConnection>();
+            _mockTransaction = new Mock<IDbTransaction>();
+            _mockLogger = new Mock<ILogger<AprovacaoRepository>>();
+            _repository = new AprovacaoRepository(_mockConnection.Object, _mockTransaction.Object, _mockLogger.Object);
+        }
+
         [Fact(DisplayName = "InserirAsync deve lançar exceção se entidade for nula")]
         public async Task InserirAsync_ShouldThrowException_WhenEntityIsNull()
         {
