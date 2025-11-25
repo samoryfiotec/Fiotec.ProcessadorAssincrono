@@ -98,7 +98,7 @@ CREATE TABLE Aprovacoes (
 
 ![Diagrama de Contexto](./out/docs/C4/Context/Context.png)
 
-## Testes Unitários nesta POC
+## Cobertura de Testes Unitários
 
 ![Coverage do Processador](./out/img/coverage_processador.png)
 
@@ -125,7 +125,6 @@ Esses pacotes são:
 - [xUnit Documentation](https://xunit.net/)
 - [Moq Documentation](https://github.com/moq/moq4)
 - [Shouldly Documentation](https://shouldly.readthedocs.io/en/latest/)
-
 
 ### Licença
 
